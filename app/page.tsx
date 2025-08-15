@@ -51,6 +51,7 @@ export default function Home() {
             >
               Learn More
             </Button>
+            <Button href="/auth/logout">check</Button>
           </Space>
         </Space>
       </Content>
