@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Alert, Space } from "antd";
 import { EnvironmentOutlined } from "@ant-design/icons";
 
@@ -137,10 +137,12 @@ const Page = () => {
                 To enable location tracking:
                 <ol>
                   <li>
-                    Click the lock/info icon in your browser's address bar
+                    Click the lock/info icon in your browser&apos;s address bar
                   </li>
-                  <li>Find "Location" or "Site Settings"</li>
-                  <li>Change the permission to "Allow"</li>
+                  <li>
+                    Find &quot;Location&quot; or &quot;Site Settings&quot;
+                  </li>
+                  <li>Change the permission to &quot;Allow&quot;</li>
                   <li>Refresh this page</li>
                 </ol>
               </div>
