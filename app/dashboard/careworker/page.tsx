@@ -4,46 +4,15 @@ import { Button, Alert, Space } from "antd";
 import { EnvironmentOutlined } from "@ant-design/icons";
 
 const Page = () => {
-  const [permissionStatus, setPermissionStatus] = useState<string>("prompt");
   const [error, setError] = useState<string | null>(null);
   const [isTracking, setIsTracking] = useState(false);
 
-  const requestGeolocation = async () => {
-    try {
-      // First, check if geolocation is supported
-      if (!navigator.geolocation) {
-        setError("Geolocation is not supported by your browser");
-        return;
-      }
-
-      // Request permission
-      const permission = await navigator.permissions.query({
-        name: "geolocation",
-      });
-      setPermissionStatus(permission.state);
-
-      if (permission.state === "granted") {
-        startTracking();
-      } else if (permission.state === "denied") {
-        setError(
-          "Location permission denied. Please enable location services in your browser settings."
-        );
-      }
-
-      // Listen for permission changes
-      permission.addEventListener("change", () => {
-        setPermissionStatus(permission.state);
-        if (permission.state === "granted") {
-          startTracking();
-        }
-      });
-    } catch (err) {
-      setError("Error requesting location permission");
-      console.error(err);
-    }
-  };
-
   const startTracking = () => {
+    if (!navigator.geolocation) {
+      setError("Geolocation is not supported by your browser");
+      return;
+    }
+
     const watchId = navigator.geolocation.watchPosition(
       async (pos) => {
         console.log("📍 Got location:", pos.coords);
@@ -120,36 +89,11 @@ const Page = () => {
           <Button
             type="primary"
             icon={<EnvironmentOutlined />}
-            onClick={requestGeolocation}
+            onClick={startTracking}
             size="large"
           >
-            {permissionStatus === "denied"
-              ? "Enable Location Services"
-              : "Start Location Tracking"}
+            Start Location Tracking
           </Button>
-        )}
-
-        {permissionStatus === "denied" && (
-          <Alert
-            message="Location Access Required"
-            description={
-              <div>
-                To enable location tracking:
-                <ol>
-                  <li>
-                    Click the lock/info icon in your browser&apos;s address bar
-                  </li>
-                  <li>
-                    Find &quot;Location&quot; or &quot;Site Settings&quot;
-                  </li>
-                  <li>Change the permission to &quot;Allow&quot;</li>
-                  <li>Refresh this page</li>
-                </ol>
-              </div>
-            }
-            type="warning"
-            showIcon
-          />
         )}
       </Space>
     </div>
