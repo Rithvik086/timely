@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-const page = () => {
+const Page = () => {
   useEffect(() => {
     const watchId = navigator.geolocation.watchPosition(
       async (pos) => {
@@ -34,4 +34,4 @@ const page = () => {
   return <div>careworker dahboard</div>;
 };
 
-export default page;
+export default Page;

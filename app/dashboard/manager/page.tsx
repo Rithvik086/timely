@@ -2,8 +2,16 @@
 import Pusher from "pusher-js";
 import { useEffect, useState } from "react";
 
+// ✅ Define the type for events
+type LocationUpdate = {
+  userId: string;
+  lat: number;
+  lon: number; // keep consistent with your API
+  timestamp: string;
+};
+
 export default function ManagerDashboard() {
-  const [locations, setLocations] = useState<any[]>([]);
+  const [locations, setLocations] = useState<LocationUpdate[]>([]);
 
   useEffect(() => {
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
@@ -12,12 +20,13 @@ export default function ManagerDashboard() {
 
     const channel = pusher.subscribe("locations");
 
-    channel.bind("location-update", (data: any) => {
+    channel.bind("location-update", (data: LocationUpdate) => {
       setLocations((prev) => [...prev, data]);
     });
 
     return () => {
-      pusher.unsubscribe("locations");
+      channel.unbind_all(); // ✅ properly unbind events
+      channel.unsubscribe();
       pusher.disconnect();
     };
   }, []);
@@ -28,7 +37,8 @@ export default function ManagerDashboard() {
       <ul>
         {locations.map((loc, i) => (
           <li key={i}>
-            {loc.userId} → {loc.lat.toFixed(5)}, {loc.lng.toFixed(5)} at {loc.timestamp}
+            {loc.userId} → {loc.lat.toFixed(5)}, {loc.lon.toFixed(5)} at{" "}
+            {new Date(loc.timestamp).toLocaleTimeString()}
           </li>
         ))}
       </ul>
