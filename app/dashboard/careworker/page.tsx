@@ -6,7 +6,7 @@ const Page = () => {
       async (pos) => {
         const { latitude, longitude } = pos.coords;
 
-        await fetch("api/pusher", {
+        await fetch("/api/pusher", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
