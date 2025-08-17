@@ -15,13 +15,44 @@ datasource db {
 }
 
 model User {
-  id      String  @id @default(cuid())
-  auth0Id String  @unique
-  email   String  @unique
-  name    String?
-  role    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String      @id @default(cuid())
+  auth0Id   String      @unique
+  email     String      @unique
+  name      String?
+  role      String?     // "manager" | "worker"
+  clocks    Clock[]
+  perimeters Perimeter[] @relation("ManagerPerimeters") // perimeters this user manages
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
 
-  
+model Clock {
+  id           String     @id @default(cuid())
+  clockIn      DateTime
+  clockOut     DateTime?
+  clockInLat   Float?
+  clockInLon   Float?
+  clockOutLat  Float?
+  clockOutLon  Float?
+  clockInNote  String?
+  clockOutNote String?
+  userId       String
+  user         User       @relation(fields: [userId], references: [id])
+  perimeterId  String
+  perimeter    Perimeter  @relation(fields: [perimeterId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Perimeter {
+  id        String    @id @default(cuid())
+  name      String?
+  latitude  Float
+  longitude Float
+  radiusM   Float      // in meters
+  managerId String
+  manager   User       @relation("ManagerPerimeters", fields: [managerId], references: [id])
+  clocks    Clock[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
