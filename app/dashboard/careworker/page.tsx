@@ -18,7 +18,7 @@ const Page = () => {
     if (storedId) {
       setWorkerId(storedId);
     } else {
-      const newId = `worker-${Math.random().toString(36).slice(2, 7)}`;
+      const newId = `worker-${crypto.randomUUID()}`;
       localStorage.setItem("workerId", newId);
       setWorkerId(newId);
     }
